@@ -1,0 +1,182 @@
+   <!-- Jquery CDN 로드 : 항상 최신 버전 사용 -->    
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script> 
+
+
+
+    <!-- 내부 JS 지정 : 일반 -->
+    <script>
+
+        /*
+        [JS 요약 설명]
+        1. window.onload : 브라우저 로드 완료 상태를 나타냅니다
+        2. $.ajax() : 비동기식 Ajax를 이용하여 HTTP 요청을 전송합니다
+        3. JSON.stringify : json 객체를 출력해줍니다
+        4. 동기식 : 하나의 로직처리가 완료된 후 다음 로직을 순차적으로 처리합니다
+        5. 비동기 : 로직 처리가 비순차적(하나가 끝날 때 까지 기다리지 않음)입니다
+        6. async / await : 동기식으로 처리를 해야하는 쪽 함수에서 사용합니다
+        7. Promise : 자바스크립트 비동기 처리에 사용되는 객체이며, 서버 응답 값을 리턴할 때 사용합니다        
+        */
+
+
+        /* [html 최초 로드 및 이벤트 상시 대기 실시] */
+        window.onload = function() {
+            console.log("");
+            console.log("[window onload] : [start]");
+            console.log("");
+
+            // 로직 처리 함수 호출 실시
+            logicFunction();
+
+        };
+
+
+
+        /* [로직 처리 이벤트 함수 정의] */
+        async function logicFunction(){ // 동기식 함수 정의
+        //function logicFunction(){ // 비동기식 함수 정의
+            console.log("");
+            console.log("[logicFunction] : [start]");         
+            console.log("");
+
+
+            // 동기식 AJAX 통신 요청
+            var data = await requestSyncPostBodyJson(); // 동기식 요청
+            console.log("");
+            console.log("[logicFunction] : [end]");
+            console.log("[data] : " + data); 
+            console.log("");
+            
+
+            // 비동기식 AJAX 통신 요청
+            /*requestAsyncPostBodyJson(); // 비동기식 요청
+            console.log("");
+            console.log("[logicFunction] : [end]"); 
+            console.log("");*/
+        };
+
+
+        /* [ajax 동기 방식 함수 정의] */       
+        function requestSyncPostBodyJson(){
+            return new Promise(function(resolve, reject){ // promise 정의
+                console.log("");                
+                console.log("[동기식 AJAX] : [start]");
+                console.log("");
+
+
+                // [요청 url 선언]
+                var reqURL = "http://jsonplaceholder.typicode.com/posts"; // 요청 주소
+
+
+                // [요청 json 데이터 선언]
+                var jsonData = { // Body에 첨부할 json 데이터
+                    "userId" : 1,
+                    "id" : 1
+                };
+
+
+                console.log("");                
+                console.log("[동기식 AJAX] : [request url] : " + reqURL);
+                console.log("[동기식 AJAX] : [request data] : " + JSON.stringify(jsonData));
+                console.log("[동기식 AJAX] : [request method] : " + "POST BODY JSON");
+                console.log("");
+
+                $.ajax({
+                    // [요청 시작 부분]
+                    url: reqURL, //주소
+                    data: JSON.stringify(jsonData), //전송 데이터
+                    type: "POST", //전송 타입
+                    async: true, //비동기 여부
+                    timeout: 10000, //타임 아웃 설정 (1000 = 1초)
+                    dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
+                    contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+
+                    // [응답 확인 부분 - json 데이터를 받습니다]
+                    success: function(response) {                        
+                        console.log("");                        
+                        console.log("[동기식 AJAX] : [response] : " + JSON.stringify(response));
+                        console.log("");
+
+
+                        // 동기식 요청을 한 함수로 결과 값 반환 실시
+                        resolve("{state = T}");
+                    },
+
+                    // [에러 확인 부분]
+                    error: function(xhr) {
+                        console.log("");                        
+                        console.log("[동기식 AJAX] : [error] : " + JSON.stringify(xhr));
+                        console.log("");
+
+
+                        // 동기식 요청을 한 함수로 결과 값 반환 실시
+                        reject("{state = F}");
+                    },
+
+                    // [완료 확인 부분]
+                    complete:function(data,textStatus) {
+                        console.log("");                        
+                        console.log("[동기식 AJAX] : [complete] : " + textStatus);
+                        console.log("");
+                    }
+                });
+            });                                
+        };   
+
+
+
+        /* [ajax 비동기 방식 함수 정의] */       
+        function requestAsyncPostBodyJson(){
+            console.log("");
+            console.log("[비동기 AJAX] : [start]");         
+            console.log("");
+
+            // [요청 url 선언]
+            var reqURL = "http://jsonplaceholder.typicode.com/posts"; // 요청 주소
+
+
+            // [요청 json 데이터 선언]
+            var jsonData = { // Body에 첨부할 json 데이터
+                "userId" : 1,
+                "id" : 1
+            };  
+            
+            console.log("");
+            console.log("[비동기 AJAX] : [request url] : " + reqURL);
+            console.log("[비동기 AJAX] : [request data] : " + JSON.stringify(jsonData));
+            console.log("[비동기 AJAX] : [request method] : " + "POST BODY JSON");
+            console.log("");
+            
+            $.ajax({
+                // [요청 시작 부분]
+                url: reqURL, //주소
+                data: JSON.stringify(jsonData), //전송 데이터
+                type: "POST", //전송 타입
+                async: true, //비동기 여부
+                timeout: 10000, //타임 아웃 설정 (1000 = 1초)
+                dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)              
+                contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+                                
+                // [응답 확인 부분 - json 데이터를 받습니다]
+                success: function(response) {
+                    console.log("");
+                    console.log("[비동기 AJAX] : [response] : " + JSON.stringify(response));                    
+                    console.log(""); 
+                },
+                                
+                // [에러 확인 부분]
+                error: function(xhr) {
+                    console.log("");
+                    console.log("[비동기 AJAX] : [error] : " + JSON.stringify(xhr));
+                    console.log("");  
+                },
+                                
+                // [완료 확인 부분]
+                complete:function(data,textStatus) {
+                    console.log("");
+                    console.log("[비동기 AJAX] : [complete] : " + textStatus);
+                    console.log("");                    
+                }
+            });                                 
+        };     
+                
+    </script>
